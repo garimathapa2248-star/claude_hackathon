@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Debt Decoder — NJIT</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&display=swap');
+:root{
+  --red:#CC0000;--red-d:#990000;--red-l:#FFF5F5;--red-m:#FECACA;
+  --amber:#D97706;--amber-l:#FFFBEB;--amber-m:#FDE68A;
+  --green:#059669;--green-l:#ECFDF5;--green-m:#A7F3D0;
+  --blue:#1D4ED8;--blue-l:#EFF6FF;--blue-m:#BFDBFE;
+  --g50:#F9FAFB;--g100:#F3F4F6;--g200:#E5E7EB;--g300:#D1D5DB;
+  --g400:#9CA3AF;--g500:#6B7280;--g600:#4B5563;--g700:#374151;
+  --g800:#1F2937;--g900:#111827;
+  --serif:'DM Serif Display',Georgia,serif;
+  --sans:'DM Sans',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--sans);background:var(--g50);color:var(--g900);min-height:100vh}
+button{font-family:var(--sans);cursor:pointer;border:none;background:none}
+.layout{display:flex;min-height:100vh}
+.sidebar{width:240px;background:var(--g900);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100;overflow-y:auto}
+.main{margin-left:240px;padding:2rem;min-height:100vh;max-width:860px}
+.page{display:none}.page.active{display:block;animation:fi .18s ease}
+@keyframes fi{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+.s-logo{padding:1.5rem 1.25rem 1rem;border-bottom:1px solid rgba(255,255,255,.07)}
+.s-logo-row{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+.s-icon{width:34px;height:34px;background:var(--red);border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:14px;color:#fff;flex-shrink:0}
+.s-name{font-size:16px;font-weight:600;color:#fff;letter-spacing:-.3px}
+.s-sub{font-size:11px;color:rgba(255,255,255,.35);padding-left:44px}
+.s-nav{padding:.75rem 0;flex:1}
+.s-sec{display:block;font-size:10px;font-weight:600;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:1px;padding:0 1.25rem;margin:12px 0 4px}
+.nb{display:flex;align-items:center;gap:10px;padding:9px 1.25rem;font-size:13px;color:rgba(255,255,255,.5);width:100%;text-align:left;border-left:3px solid transparent;transition:all .15s}
+.nb:hover{color:rgba(255,255,255,.85);background:rgba(255,255,255,.04)}
+.nb.on{color:#fff;background:rgba(204,0,0,.15);border-left-color:var(--red);font-weight:500}
+.nbadge{margin-left:auto;font-size:10px;font-weight:700;background:var(--red);color:#fff;padding:1px 6px;border-radius:20px}
+.s-footer{padding:1rem 1.25rem;border-top:1px solid rgba(255,255,255,.07)}
+.s-user{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.06);border-radius:6px;padding:8px 10px}
+.sdot{width:8px;height:8px;border-radius:50%;background:var(--red)}
+.sul{font-size:10px;color:rgba(255,255,255,.4)}.sun{font-size:12px;font-weight:500;color:rgba(255,255,255,.8)}
+.ph{margin-bottom:1.75rem}
+.ph h1{font-family:var(--serif);font-size:28px;letter-spacing:-.3px;margin-bottom:4px}
+.ph p{font-size:14px;color:var(--g500);line-height:1.5}
+.card{background:#fff;border-radius:16px;border:1px solid var(--g200);padding:1.25rem 1.5rem;margin-bottom:1rem;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.ct{font-size:14px;font-weight:600;color:var(--g800);margin-bottom:10px}
+.chr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
+.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:1.25rem}
+.metric{background:#fff;border-radius:16px;border:1px solid var(--g200);padding:1.25rem;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.ml{font-size:11px;font-weight:500;color:var(--g500);text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px}
+.mv{font-size:26px;font-weight:700;font-family:var(--serif)}
+.mv.red{color:var(--red)}.mv.green{color:var(--green)}.mv.amber{color:var(--amber)}
+.mn{font-size:11px;color:var(--g400);margin-top:4px}
+.scard{display:flex;align-items:center;gap:1.5rem;background:#fff;border-radius:16px;border:1px solid var(--g200);padding:1.25rem 1.5rem;box-shadow:0 1px 3px rgba(0,0,0,.06);margin-bottom:1.25rem}
+.rw{position:relative;width:90px;height:90px;flex-shrink:0}
+.rw svg{transform:rotate(-90deg)}
+.rn{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:var(--serif);font-size:24px;color:var(--amber)}
+.sit{font-size:11px;font-weight:600;color:var(--g400);text-transform:uppercase;letter-spacing:.6px;margin-bottom:4px}
+.siv{font-size:18px;font-weight:600;font-family:var(--serif);color:var(--amber);margin-bottom:4px}
+.sid{font-size:12px;color:var(--g500);line-height:1.55}
+.dr{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--g100);font-size:13px}
+.dr:last-child{border-bottom:none}
+.drl{color:var(--g500)}.drv{font-weight:500;color:var(--g800)}
+.drv.red{color:var(--red)}.drv.green{color:var(--green)}.drv.amber{color:var(--amber)}
+.badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;text-transform:uppercase;letter-spacing:.4px}
+.badge.red{background:var(--red-l);color:var(--red)}.badge.amber{background:var(--amber-l);color:var(--amber)}
+.badge.green{background:var(--green-l);color:var(--green)}.badge.blue{background:var(--blue-l);color:var(--blue)}
+.flag{display:flex;gap:12px;padding:12px 14px;border-radius:10px;margin-bottom:8px;border:1px solid}
+.fd{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.flag.red{background:var(--red-l);border-color:var(--red-m)}.flag.red .fd{background:var(--red)}
+.flag.amber{background:var(--amber-l);border-color:var(--amber-m)}.flag.amber .fd{background:var(--amber)}
+.flag.green{background:var(--green-l);border-color:var(--green-m)}.flag.green .fd{background:var(--green)}
+.flag.blue{background:var(--blue-l);border-color:var(--blue-m)}.flag.blue .fd{background:var(--blue)}
+.ft{font-size:13px;font-weight:600;margin-bottom:3px}
+.flag.red .ft{color:#7F1D1D}.flag.amber .ft{color:#78350F}.flag.green .ft{color:#064E3B}.flag.blue .ft{color:#1E3A8A}
+.fb{font-size:12px;line-height:1.6}
+.flag.red .fb{color:#991B1B}.flag.amber .fb{color:#92400E}.flag.green .fb{color:#065F46}.flag.blue .fb{color:#1E40AF}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:10px;font-size:13px;font-weight:500;border:none;cursor:pointer;transition:all .15s}
+.btn.p{background:var(--red);color:#fff}.btn.p:hover{background:var(--red-d)}
+.btn.s{background:transparent;color:var(--g600);border:1px solid var(--g300)}.btn.s:hover{background:var(--g50)}
+.btn.g{background:transparent;color:var(--g500);border:1px solid var(--g200)}.btn.g:hover{background:var(--g50)}
+.uzone{border:2px dashed var(--g300);border-radius:24px;padding:3rem 2rem;text-align:center;margin-bottom:1.25rem;cursor:pointer;transition:border-color .15s}
+.uzone:hover{border-color:var(--red)}
+.uico{width:52px;height:52px;background:var(--red-l);border-radius:12px;margin:0 auto 1rem;display:flex;align-items:center;justify-content:center}
+.ut{font-size:16px;font-weight:600;color:var(--g800);margin-bottom:6px}
+.us{font-size:13px;color:var(--g500);margin-bottom:1.25rem;line-height:1.5}
+.utypes{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:1.25rem}
+.utype{font-size:11px;background:var(--g100);color:var(--g600);padding:4px 10px;border-radius:20px;font-weight:500}
+.br{display:flex;gap:8px;justify-content:center}
+.prog-bar{height:4px;background:var(--g200);border-radius:2px;overflow:hidden;margin-top:8px}
+.prog-fill{height:100%;background:var(--red);border-radius:2px;animation:pg 2s ease forwards}
+@keyframes pg{from{width:0}to{width:100%}}
+.slbl{display:block;font-size:11px;font-weight:600;color:var(--g400);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;margin-top:1.5rem}
+.slbl:first-child{margin-top:0}
+.tgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1rem}
+.tc{background:#fff;border:1px solid var(--g200);border-radius:10px;padding:14px;cursor:pointer;transition:all .15s}
+.tc:hover,.tc.open{border-color:var(--red);box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.th{display:flex;justify-content:space-between;align-items:flex-start}
+.tn{font-size:14px;font-weight:600;color:var(--g800);margin-bottom:3px}
+.tp{font-size:12px;color:var(--g400)}
+.ta{font-size:11px;color:var(--g400);transition:transform .2s}
+.tc.open .ta{transform:rotate(180deg);color:var(--red)}
+.tdef{font-size:13px;color:var(--g600);line-height:1.65;margin-top:10px;padding-top:10px;border-top:1px solid var(--g100);display:none}
+.tc.open .tdef{display:block}
+.cwrap{background:#fff;border-radius:16px;border:1px solid var(--g200);overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.06);margin-bottom:1rem}
+.chead{padding:14px 1.25rem;border-bottom:1px solid var(--g100);display:flex;align-items:center;gap:10px}
+.cav{width:32px;height:32px;background:var(--red);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0}
+.cn{font-size:13px;font-weight:600;color:var(--g800)}
+.cst{font-size:11px;color:var(--green);display:flex;align-items:center;gap:4px}
+.stdot{width:6px;height:6px;border-radius:50%;background:var(--green)}
+.clog{padding:1rem;min-height:300px;max-height:420px;overflow-y:auto;display:flex;flex-direction:column;gap:10px}
+.msg{max-width:82%;padding:10px 14px;font-size:13px;line-height:1.6;border-radius:14px}
+.msg.bot{background:var(--g50);border:1px solid var(--g200);color:var(--g800);align-self:flex-start;border-top-left-radius:3px}
+.msg.user{background:var(--red);color:#fff;align-self:flex-end;border-top-right-radius:3px}
+.tdots{display:flex;gap:5px;padding:4px 0;align-items:center}
+.td{width:7px;height:7px;border-radius:50%;background:var(--g400);animation:bl 1.2s ease-in-out infinite}
+.td:nth-child(2){animation-delay:.2s}.td:nth-child(3){animation-delay:.4s}
+@keyframes bl{0%,80%,100%{opacity:.3;transform:scale(.8)}40%{opacity:1;transform:scale(1)}}
+.csugs{padding:8px 1rem;border-top:1px solid var(--g100);display:flex;gap:6px;flex-wrap:wrap}
+.sug{font-size:11px;padding:5px 10px;border:1px solid var(--g200);border-radius:20px;cursor:pointer;color:var(--g600);background:var(--g50);transition:all .15s;white-space:nowrap}
+.sug:hover{border-color:var(--red);color:var(--red);background:var(--red-l)}
+.cinrow{padding:10px 1rem;border-top:1px solid var(--g100);display:flex;gap:8px}
+.cin{flex:1;padding:9px 14px;border:1px solid var(--g200);border-radius:10px;font-size:13px;font-family:var(--sans);outline:none;color:var(--g800);background:var(--g50)}
+.cin:focus{border-color:var(--red);background:#fff}
+.csend{background:var(--red);color:#fff;border-radius:10px;padding:9px 14px;font-size:13px;font-weight:500;transition:background .15s}
+.csend:hover{background:var(--red-d)}.csend:disabled{opacity:.45;cursor:not-allowed}
+.sgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:1rem}
+.sc{background:#fff;border:1px solid var(--g200);border-radius:16px;padding:1.25rem;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.sc.w{border:2px solid var(--green)}
+.wb{display:inline-block;font-size:10px;font-weight:700;background:var(--green-l);color:var(--green);padding:2px 8px;border-radius:20px;margin-bottom:8px;text-transform:uppercase;letter-spacing:.4px}
+.scn{font-size:16px;font-weight:700;font-family:var(--serif);color:var(--g900)}
+.sct{font-size:12px;color:var(--g400);margin-bottom:10px}
+.scc{font-size:26px;font-family:var(--serif);margin:8px 0 2px}
+.scc.green{color:var(--green)}.scc.red{color:var(--red)}
+.scn2{font-size:11px;color:var(--g400);margin-bottom:10px}
+.ledit{width:100%;min-height:400px;padding:1.25rem 1.5rem;border:1.5px solid var(--red);border-radius:10px;font-size:13px;line-height:1.9;color:var(--g700);font-family:Georgia,serif;resize:vertical;outline:none;margin-bottom:1rem;background:#fff}
+.crow{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.clbl{font-size:12px;color:var(--g600);min-width:130px}
+.cval{font-size:13px;font-weight:600;min-width:64px;text-align:right;color:var(--g800)}
+.csl{flex:1;accent-color:var(--red)}
+.cres{background:var(--g50);border-radius:10px;padding:1rem;margin-top:10px}
+.crr{display:flex;justify-content:space-between;font-size:13px;padding:4px 0}
+.crtot{display:flex;justify-content:space-between;font-size:15px;font-weight:700;padding-top:8px;border-top:1px solid var(--g200);margin-top:4px;color:var(--red)}
+.cins{margin-top:12px;padding:12px;background:var(--red-l);border-radius:10px;font-size:13px;color:#991B1B;line-height:1.6}
+.si{display:flex;gap:14px;padding:12px 0;border-bottom:1px solid var(--g100)}
+.si:last-child{border-bottom:none}
+.snum{width:28px;height:28px;border-radius:50%;background:var(--red);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.stit{font-size:13px;font-weight:600;color:var(--g800);margin-bottom:3px}
+.sbod{font-size:12px;color:var(--g500);line-height:1.6}
+.cbanner{background:var(--red);color:#fff;border-radius:16px;padding:1.25rem 1.5rem;margin-bottom:1.25rem}
+.ctit{font-size:16px;font-weight:700;margin-bottom:4px;font-family:var(--serif)}
+.csub{font-size:13px;opacity:.85;line-height:1.5}
+.ri{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--g100)}
+.ri:last-child{border-bottom:none}
+.rn{font-size:13px;font-weight:600;color:var(--g800);margin-bottom:2px}
+.rd{font-size:12px;color:var(--g500)}
+.rc{font-size:12px;color:var(--red);font-weight:600;white-space:nowrap;margin-left:12px}
+.ai{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--g100)}
+.ai:last-child{border-bottom:none}
+.an{width:22px;height:22px;border-radius:50%;background:var(--g900);color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.at{font-size:13px;color:var(--g700);line-height:1.55}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-thumb{background:var(--g300);border-radius:3px}
+</style>
+</head>
+<body>
+<div class="layout">
+<aside class="sidebar">
+  <div class="s-logo">
+    <div class="s-logo-row"><div class="s-icon">DD</div><div class="s-name">Debt Decoder</div></div>
+    <div class="s-sub">NJIT Financial Aid Companion</div>
+  </div>
+  <div class="s-nav">
+    <span class="s-sec">My Aid</span>
+    <button class="nb on" data-p="dashboard"><svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>Dashboard</button>
+    <button class="nb" data-p="redflags"><svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>Red Flags<span class="nbadge">3</span></button>
+    <button class="nb" data-p="terms"><svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>Term Decoder</button>
+    <button class="nb" data-p="chat"><svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>Ask Claude</button>
+    <span class="s-sec">Tools</span>
+    <button class="nb" data-p="compare"><svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>Compare Schools</button>
+    <button class="nb" data-p="appeal"><svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>Appeal Letter</button>
+    <button class="nb" data-p="capcalc"><svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>Cap Calculator</button>
+    <span class="s-sec">NJIT Specific</span>
+    <button class="nb" data-p="visa"><svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064"/></svg>Visa & Tuition</button>
+    <button class="nb" data-p="emergency"><svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>Crisis Help</button>
+  </div>
+  <div class="s-footer">
+    <div class="s-user"><div class="sdot"></div><div><div class="sul">Logged in as</div><div class="sun">NJIT Student</div></div></div>
+  </div>
+</aside>
+
+<main class="main">
+
+<!-- DASHBOARD -->
+<div class="page active" id="page-dashboard">
+  <div class="ph"><h1>Your Financial Aid Dashboard</h1><p>NJIT Fall 2025 · Upload your documents or load the sample below.</p></div>
+  <div id="upload-sec">
+    <div class="uzone" onclick="document.getElementById('fin').click()">
+      <input type="file" id="fin" multiple accept=".pdf,.doc,.docx,.jpg,.png" style="display:none" onchange="startAnalysis()"/>
+      <div class="uico"><svg width="26" height="26" fill="none" stroke="#CC0000" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg></div>
+      <div class="ut">Upload your NJIT financial aid documents</div>
+      <div class="us">Award letters, scholarship docs, tuition bills, NJ state aid, loan offers</div>
+      <div class="utypes"><span class="utype">Award Letter</span><span class="utype">Scholarship</span><span class="utype">Tuition Bill</span><span class="utype">Loan Offer</span><span class="utype">NJ State Aid</span></div>
+      <div class="br">
+        <button class="btn p" onclick="event.stopPropagation();document.getElementById('fin').click()">Upload Documents</button>
+        <button class="btn s" onclick="event.stopPropagation();startAnalysis()">Load Sample ↗</button>
+      </div>
+    </div>
+    <div id="analyzing" style="display:none" class="card"><div style="font-size:13px;color:var(--g600);margin-bottom:8px">Analyzing your documents with AI...</div><div class="prog-bar"><div class="prog-fill"></div></div></div>
+  </div>
+  <div id="demo-sec" style="display:none">
+    <div class="metrics">
+      <div class="metric"><div class="ml">Total Cost of Attendance</div><div class="mv">$34,200</div><div class="mn">Per academic year</div></div>
+      <div class="metric"><div class="ml">Free Aid</div><div class="mv green">$18,500</div><div class="mn">Grants + scholarships</div></div>
+      <div class="metric"><div class="ml">Your Remaining Cost</div><div class="mv red">$15,700</div><div class="mn">Loans + out-of-pocket</div></div>
+    </div>
+    <div class="scard">
+      <div class="rw"><svg width="90" height="90" viewBox="0 0 90 90"><circle cx="45" cy="45" r="36" fill="none" stroke="#E5E7EB" stroke-width="9"/><circle cx="45" cy="45" r="36" fill="none" stroke="#D97706" stroke-width="9" stroke-dasharray="226.19" stroke-dashoffset="83.7" stroke-linecap="round"/></svg><div class="rn">63</div></div>
+      <div><div class="sit">Package Health Score</div><div class="siv">63 / 100 — Caution</div><div class="sid">Your free aid is strong but your private loan carries serious risks. <span style="color:var(--red);cursor:pointer" onclick="goTo('redflags')">View red flags →</span></div></div>
+    </div>
+    <span class="slbl">Your Documents Decoded</span>
+    <div class="card">
+      <div class="chr"><div><div class="ct">Highlander Merit Scholarship — $12,000/yr</div><div style="font-size:12px;color:var(--g500)">NJIT Presidential Award</div></div><span class="badge amber">Conditional</span></div>
+      <div class="dr"><span class="drl">Annual amount</span><span class="drv green">$12,000</span></div>
+      <div class="dr"><span class="drl">Renewable?</span><span class="drv">Yes — up to 4 years</span></div>
+      <div class="dr"><span class="drl">Minimum GPA</span><span class="drv red">3.5 each semester</span></div>
+      <div class="dr"><span class="drl">Minimum credits</span><span class="drv red">15 credits/semester</span></div>
+      <div class="dr"><span class="drl">Major restriction</span><span class="drv amber">STEM majors only</span></div>
+      <div class="dr"><span class="drl">Stacks with federal aid?</span><span class="drv green">Yes — no penalty</span></div>
+    </div>
+    <div class="card">
+      <div class="chr"><div><div class="ct">NJ TAG Grant — $3,500/yr</div><div style="font-size:12px;color:var(--g500)">Tuition Aid Grant · New Jersey State</div></div><span class="badge green">Free Money</span></div>
+      <div class="dr"><span class="drl">Type</span><span class="drv green">Grant — never repay</span></div>
+      <div class="dr"><span class="drl">NJ residency required</span><span class="drv">Yes</span></div>
+      <div class="dr"><span class="drl">Renewal</span><span class="drv amber">Must reapply via FAFSA annually</span></div>
+    </div>
+    <div class="card">
+      <div class="chr"><div><div class="ct">Federal Subsidized Loan — $3,500</div><div style="font-size:12px;color:var(--g500)">Direct Subsidized Stafford Loan</div></div><span class="badge blue">Best Type</span></div>
+      <div class="dr"><span class="drl">Interest rate</span><span class="drv green">5.50% fixed</span></div>
+      <div class="dr"><span class="drl">Interest during school</span><span class="drv green">No — government pays it</span></div>
+      <div class="dr"><span class="drl">Grace period</span><span class="drv">6 months after graduation</span></div>
+      <div class="dr"><span class="drl">Monthly payment (10-yr)</span><span class="drv">~$38/month</span></div>
+    </div>
+    <div class="card">
+      <div class="chr"><div><div class="ct">Private Loan — $8,000</div><div style="font-size:12px;color:var(--g500)">Sallie Mae Smart Option Loan</div></div><span class="badge red">⚠ Watch Out</span></div>
+      <div class="dr"><span class="drl">Interest rate</span><span class="drv red">6.99–14.5% variable</span></div>
+      <div class="dr"><span class="drl">Interest during school</span><span class="drv red">Accruing right now, daily</span></div>
+      <div class="dr"><span class="drl">Grace period</span><span class="drv red">None — payments start at graduation</span></div>
+      <div class="dr"><span class="drl">Capitalization at graduation</span><span class="drv red">~$2,800 added to balance</span></div>
+      <div class="dr"><span class="drl">Monthly payment range</span><span class="drv red">$93–$150/month</span></div>
+    </div>
+    <span class="slbl">What to do right now</span>
+    <div class="card">
+      <div class="ai"><div class="an">1</div><div class="at">Set a GPA reminder every semester end. Dropping below 3.5 costs you $12,000 instantly.</div></div>
+      <div class="ai"><div class="an">2</div><div class="at">Minimize the private loan. Every dollar accrues interest daily. Borrow only what you truly need.</div></div>
+      <div class="ai"><div class="an">3</div><div class="at">Check EOF eligibility. First-gen NJ students may qualify for $2,000–$5,000 more per year. Email eof@njit.edu.</div></div>
+      <div class="ai"><div class="an">4</div><div class="at">Enroll in auto-debit on your federal loan to lock in the 0.25% rate discount before first payment.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- RED FLAGS -->
+<div class="page" id="page-redflags">
+  <div class="ph"><h1>Red Flag Scanner</h1><p>Hidden risks in your documents — with real dollar impact, not just warnings.</p></div>
+  <div class="scard"><div class="rw"><svg width="90" height="90" viewBox="0 0 90 90"><circle cx="45" cy="45" r="36" fill="none" stroke="#E5E7EB" stroke-width="9"/><circle cx="45" cy="45" r="36" fill="none" stroke="#D97706" stroke-width="9" stroke-dasharray="226.19" stroke-dashoffset="83.7" stroke-linecap="round"/></svg><div class="rn">63</div></div><div><div class="sit">Package Health Score</div><div class="siv">3 critical · 3 warnings · 2 good</div><div class="sid">Address red flags first — each one costs real money if ignored.</div></div></div>
+  <span class="slbl">Critical — address immediately</span>
+  <div class="flag red"><div class="fd"></div><div><div class="ft">Variable interest rate — private loan</div><div class="fb">Your rate ranges 6.99–14.5%. At the ceiling, monthly payments jump from $93 to $150 — an extra $684/year on the same loan. Always model the worst case, not the starting rate.</div></div></div>
+  <div class="flag red"><div class="fd"></div><div><div class="ft">No grace period — payments start at graduation</div><div class="fb">Federal loans give 6 months. Your Sallie Mae loan does not. You need income before your last semester ends or you're immediately at default risk with no buffer.</div></div></div>
+  <div class="flag red"><div class="fd"></div><div><div class="ft">Interest capitalizing right now — ~$2,800 at graduation</div><div class="fb">Your private loan accrues ~$1.53/day. In 4 years ~$2,800 gets added to your $8,000 principal. You'll pay interest on $10,800 instead of $8,000 for 10 years — roughly $800 extra. See Cap Calculator for your exact numbers.</div></div></div>
+  <span class="slbl">Warnings — monitor closely</span>
+  <div class="flag amber"><div class="fd"></div><div><div class="ft">Scholarship GPA floor — 3.5 minimum, no exceptions noted</div><div class="fb">Dropping to 3.4 at any semester end means losing $12,000 for that year. NJIT CS and engineering courses commonly cause freshman GPA dips. Know the appeal process before you need it.</div></div></div>
+  <div class="flag amber"><div class="fd"></div><div><div class="ft">15 credits/semester required — above standard load</div><div class="fb">Most students take 12–15. If you drop a class for any reason you risk losing the scholarship. Ask financial aid if a hardship waiver exists before this happens.</div></div></div>
+  <div class="flag amber"><div class="fd"></div><div><div class="ft">Auto-debit discount — can vanish permanently</div><div class="fb">0.25% rate reduction for auto-pay. If a single payment bounces, many lenders remove it forever. Use a dedicated account with always-sufficient funds.</div></div></div>
+  <span class="slbl">You're in good shape here</span>
+  <div class="flag green"><div class="fd"></div><div><div class="ft">Federal subsidized loan — best type available</div><div class="fb">Fixed rate, government pays interest while in school, access to income-driven repayment and forgiveness programs after graduation.</div></div></div>
+  <div class="flag green"><div class="fd"></div><div><div class="ft">Scholarship stacks with federal aid — no clawback</div><div class="fb">Your Highlander Scholarship doesn't reduce your federal aid eligibility. You receive both without any penalty or reduction.</div></div></div>
+</div>
+
+<!-- TERMS -->
+<div class="page" id="page-terms">
+  <div class="ph"><h1>Term Decoder</h1><p>Every financial term in your documents — plain English, with context for your NJIT situation.</p></div>
+  <div class="tgrid" id="tgrid"></div>
+</div>
+
+<!-- CHAT -->
+<div class="page" id="page-chat">
+  <div class="ph"><h1>Ask Claude</h1><p>Your AI financial advisor — powered by Claude, with full context of your NJIT documents.</p></div>
+  <div class="cwrap">
+    <div class="chead"><div class="cav">AI</div><div><div class="cn">Debt Decoder AI</div><div class="cst"><div class="stdot"></div>Online — NJIT documents loaded</div></div></div>
+    <div class="clog" id="clog"><div class="msg bot">Hi! I've reviewed your NJIT financial aid documents — Highlander Scholarship, TAG Grant, federal subsidized loan, and Sallie Mae private loan. Ask me anything about terms, risks, what happens in specific situations, or what you should do next.</div></div>
+    <div class="csugs" id="csugs"></div>
+    <div class="cinrow"><input class="cin" id="cin" type="text" placeholder="Ask about your loans, scholarship, NJIT programs, visa status..." onkeydown="if(event.key==='Enter')sendChat()"/><button class="csend" id="csend" onclick="sendChat()">Send</button></div>
+  </div>
+</div>
+
+<!-- COMPARE -->
+<div class="page" id="page-compare">
+  <div class="ph"><h1>Compare Schools</h1><p>True 4-year cost — not year-one estimates. What you'll actually owe.</p></div>
+  <div class="sgrid">
+    <div class="sc w"><div class="wb">Best value for your profile</div><div class="scn">NJIT</div><div class="sct">Public university — in-state NJ</div><div class="scc green">$15,700<span style="font-size:15px;color:var(--g400)">/yr</span></div><div class="scn2">True net cost after all aid</div><div class="dr"><span class="drl" style="font-size:12px">Scholarship</span><span class="drv" style="font-size:12px">$12,000 renewable</span></div><div class="dr"><span class="drl" style="font-size:12px">4-year debt</span><span class="drv green" style="font-size:12px">~$46,000</span></div><div class="dr"><span class="drl" style="font-size:12px">Scholarship risk</span><span class="drv amber" style="font-size:12px">GPA 3.5 required</span></div></div>
+    <div class="sc"><div style="height:22px"></div><div class="scn">Stevens Tech</div><div class="sct">Private university — Hoboken, NJ</div><div class="scc red">$28,400<span style="font-size:15px;color:var(--g400)">/yr</span></div><div class="scn2">True net cost after all aid</div><div class="dr"><span class="drl" style="font-size:12px">Scholarship</span><span class="drv red" style="font-size:12px">$8,000 — year 1 only</span></div><div class="dr"><span class="drl" style="font-size:12px">4-year debt</span><span class="drv red" style="font-size:12px">~$103,000</span></div><div class="dr"><span class="drl" style="font-size:12px">Scholarship risk</span><span class="drv red" style="font-size:12px">One-time — gone year 2</span></div></div>
+  </div>
+  <div class="flag amber"><div class="fd"></div><div><div class="ft">Stevens' scholarship disappears after year 1</div><div class="fb">Their $8,000 is a one-time grant. Year 2 your Stevens cost jumps to $36,400/yr. Over 4 years you'd graduate with $57,000 more debt — roughly $600/month more in payments for 10 years.</div></div></div>
+  <div class="flag blue"><div class="fd"></div><div><div class="ft">Profile: CS major · ~$85k expected starting salary · NJ resident</div><div class="fb">NJIT CS graduates earn median starting salaries well above the loan burden threshold for this package.</div></div></div>
+  <div style="margin-top:16px"><button class="btn p" onclick="goTo('appeal')">Generate appeal letter to Stevens →</button></div>
+</div>
+
+<!-- APPEAL -->
+<div class="page" id="page-appeal">
+  <div class="ph"><h1>Appeal Letter Generator</h1><p>Turn your better offer into leverage. Students with financially savvy families do this routinely.</p></div>
+  <div class="flag blue"><div class="fd"></div><div><div class="ft">You can negotiate financial aid — most students don't know this</div><div class="fb">Financial aid offers are not final. With a competing offer, you can ask the school with the weaker package to match it. Schools grant these requests regularly. Edit the letter below and send it.</div></div></div>
+  <div class="card" style="margin-bottom:16px"><div class="ct">Your leverage</div><div class="dr"><span class="drl">NJIT net cost</span><span class="drv green">$15,700/yr</span></div><div class="dr"><span class="drl">Stevens net cost</span><span class="drv red">$28,400/yr</span></div><div class="dr"><span class="drl">4-year debt gap</span><span class="drv red">~$57,000</span></div></div>
+  <span class="slbl">Edit and send — this letter is yours</span>
+  <textarea class="ledit" id="aletter"></textarea>
+  <div style="display:flex;gap:8px"><button class="btn p" onclick="copyLetter()">Copy Letter</button><button class="btn s" onclick="resetLetter()">Reset</button></div>
+</div>
+
+<!-- CAP CALC -->
+<div class="page" id="page-capcalc">
+  <div class="ph"><h1>Capitalization Calculator</h1><p>See what interest capitalization will cost you — before it happens.</p></div>
+  <div class="flag red"><div class="fd"></div><div><div class="ft">What is capitalization?</div><div class="fb">When you don't pay interest during school, it accumulates. At repayment start, all unpaid interest gets added to your principal — and you pay interest on that larger number for the full term. One of the most costly and least understood aspects of private student loans.</div></div></div>
+  <div class="card">
+    <div class="ct">Adjust your loan details</div>
+    <div class="crow"><span class="clbl">Loan amount</span><input type="range" class="csl" id="sl-loan" min="1000" max="50000" step="500" value="8000" oninput="updateCap()"/><span class="cval" id="out-loan">$8,000</span></div>
+    <div class="crow"><span class="clbl">Interest rate</span><input type="range" class="csl" id="sl-rate" min="3" max="15" step="0.5" value="7" oninput="updateCap()"/><span class="cval" id="out-rate">7.0%</span></div>
+    <div class="crow"><span class="clbl">Years in school</span><input type="range" class="csl" id="sl-years" min="1" max="6" step="1" value="4" oninput="updateCap()"/><span class="cval" id="out-years">4 years</span></div>
+    <div class="cres">
+      <div class="crr"><span style="color:var(--g500)">Original loan amount</span><span id="cr-orig" style="font-weight:500">$8,000</span></div>
+      <div class="crr"><span style="color:var(--g500)">Interest accrued during school</span><span id="cr-acc" style="font-weight:500;color:var(--red)">+$2,240</span></div>
+      <div class="crr"><span style="color:var(--g500)">Monthly interest cost now (if paid)</span><span id="cr-mo" style="font-weight:500">~$47/mo</span></div>
+      <div class="crtot"><span>Capitalized balance at repayment</span><span id="cr-tot">$10,240</span></div>
+    </div>
+    <div class="cins" id="cins">That extra <strong>$2,240</strong> doesn't sit still — you now pay 7.0% on <strong>$10,240</strong> instead of $8,000. Over 10 years this costs roughly <strong>$784</strong> more than paying interest during school (~$47/month).</div>
+  </div>
+  <div class="flag green"><div class="fd"></div><div><div class="ft" id="cgt">How to fight it: pay ~$47/month now</div><div class="fb" id="cgb">Paying just the monthly interest during school prevents $2,240 from capitalizing. Your federal subsidized loan avoids this entirely — the government pays that interest. Focus on the private loan.</div></div></div>
+</div>
+
+<!-- VISA -->
+<div class="page" id="page-visa">
+  <div class="ph"><h1>Visa & Tuition Classification</h1><p>For NJIT students on visa transitions — a $16,000/year question worth fighting for.</p></div>
+  <div class="flag red"><div class="fd"></div><div><div class="ft">In-state vs. international tuition — $16,000/year at NJIT</div><div class="fb">If your visa status changes (e.g. H-1B dependent to F-1), you risk reclassification as international — unless you proactively submit NJ domicile documentation. Over 4 years that's $64,000. Many students lose in-state status simply because nobody told them to file.</div></div></div>
+  <div class="flag blue"><div class="fd"></div><div><div class="ft">F-1 students: you may still qualify for in-state rates</div><div class="fb">F-1 status alone doesn't automatically disqualify you from in-state tuition in NJ. If you or your parents have established NJ domicile — not just residence — you can file a classification appeal.</div></div></div>
+  <span class="slbl">Document checklist — in-state tuition appeal</span>
+  <div class="card">
+    <div class="si"><div class="snum">1</div><div><div class="stit">Proof of NJ domicile</div><div class="sbod">NJ driver's license or state ID, lease or mortgage in your name (or parent's if dependent), showing this is your primary home — not just a mailing address.</div></div></div>
+    <div class="si"><div class="snum">2</div><div><div class="stit">12-month continuous NJ residency evidence</div><div class="sbod">Utility bills, bank statements, or employer letters showing a consistent NJ address for 12+ consecutive months before the semester of your appeal.</div></div></div>
+    <div class="si"><div class="snum">3</div><div><div class="stit">Intent to remain in NJ documentation</div><div class="sbod">NJ voter registration card, NJ state tax returns (Form NJ-1040), or a signed domicile declaration form from NJIT's Registrar's Office.</div></div></div>
+    <div class="si"><div class="snum">4</div><div><div class="stit">Complete visa status documentation</div><div class="sbod">Current I-20, I-94 arrival/departure record, all USCIS approval notices for current and previous visa statuses, and passport biographic page.</div></div></div>
+    <div class="si"><div class="snum">5</div><div><div class="stit">Submit to NJIT Registrar — before semester billing deadline</div><div class="sbod">Email registrar@njit.edu · Subject: "In-State Tuition Classification Appeal — [Name] — [NJIT ID]". Attach all docs. Follow up in 5 business days. Late submissions are almost never accepted.</div></div></div>
+  </div>
+  <div class="flag amber"><div class="fd"></div><div><div class="ft">Health insurance waiver — 2-week window only</div><div class="fb">NJIT auto-enrolls international students in university health insurance (~$2,500/yr). If you have comparable coverage, waive it — but the window is only the first 2 weeks of each semester.</div></div></div>
+</div>
+
+<!-- EMERGENCY -->
+<div class="page" id="page-emergency">
+  <div class="ph"><h1>Crisis Help</h1><p>Real NJIT resources, real contact info. You do not have to figure this out alone.</p></div>
+  <div class="cbanner"><div class="ctit">In financial crisis right now?</div><div class="csub">NJIT has people whose entire job is to help you through exactly this. Use the resources below — none require you to have it figured out first.</div></div>
+  <div class="card">
+    <div class="ri"><div><div class="rn">NJIT Emergency Financial Aid Fund</div><div class="rd">One-time grants for sudden hardship — job loss, family emergency, medical crisis</div></div><div class="rc">financialaid@njit.edu</div></div>
+    <div class="ri"><div><div class="rn">Highlander Food Pantry</div><div class="rd">Free groceries — no appointment, no questions, no judgment</div></div><div class="rc">Campus Center Rm 235</div></div>
+    <div class="ri"><div><div class="rn">Dean of Students Office</div><div class="rd">Housing crisis, unexpected hardship, family emergency — they advocate for you</div></div><div class="rc">973-596-3466</div></div>
+    <div class="ri"><div><div class="rn">SAP Appeal — Lost Aid Due to Grades</div><div class="rd">Aid suspension is appealable. Document your hardship and file immediately.</div></div><div class="rc">financialaid@njit.edu</div></div>
+    <div class="ri"><div><div class="rn">EOF Emergency Support</div><div class="rd">First-gen EOF students have additional emergency funding separate from general aid</div></div><div class="rc">eof@njit.edu</div></div>
+    <div class="ri"><div><div class="rn">NJIT Counseling Center</div><div class="rd">Financial stress is real stress. Free confidential sessions for all students.</div></div><div class="rc">973-596-3414</div></div>
+  </div>
+  <span class="slbl">Before you withdraw from a class</span>
+  <div class="flag red"><div class="fd"></div><div><div class="ft">Withdrawing triggers a chain reaction you can't undo</div><div class="fb">Dropping below full-time can simultaneously affect your scholarship, loan disbursement, health insurance, F-1 visa status, and SAP standing — all at once. Talk to financial aid BEFORE withdrawing, not after.</div></div></div>
+  <div class="flag amber"><div class="fd"></div><div><div class="ft">Your refund check is not free money</div><div class="fb">When aid exceeds tuition, NJIT sends a refund. Loan portions must be repaid with interest. Budget it across the full semester before spending any of it.</div></div></div>
+</div>
+
+</main>
+</div>
+
+<script>
+// ── NAV ──────────────────────────────────────────────────────────
+function goTo(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));
+  document.getElementById('page-'+id).classList.add('active');
+  var btn=document.querySelector('[data-p="'+id+'"]');
+  if(btn)btn.classList.add('on');
+}
+document.querySelectorAll('.nb').forEach(btn=>{
+  btn.addEventListener('click',()=>goTo(btn.dataset.p));
+});
+
+// ── UPLOAD ───────────────────────────────────────────────────────
+function startAnalysis(){
+  document.getElementById('analyzing').style.display='block';
+  setTimeout(()=>{
+    document.getElementById('upload-sec').style.display='none';
+    document.getElementById('demo-sec').style.display='block';
+  },2200);
+}
+
+// ── TERMS ────────────────────────────────────────────────────────
+var TERMS=[
+  {n:"Capitalization",p:"When unpaid interest becomes principal",d:"When you don't pay interest while in school, it accumulates silently. At graduation, all unpaid interest gets added to your original loan balance — and you now pay interest on that larger number. On your $8k private loan over 4 years, this adds ~$2,800 that compounds against you for 10 years of repayment."},
+  {n:"Forbearance",p:"Pausing payments — interest still runs",d:"A temporary pause on loan payments for financial hardship. Sounds helpful — but interest keeps accruing the entire time. When forbearance ends, all accumulated interest capitalizes onto your principal. Use it only as an absolute last resort."},
+  {n:"Variable rate",p:"Interest rate tied to market conditions",d:"An interest rate that rises and falls with a market index. Your Sallie Mae loan at '6.99–14.5% variable' could more than double if rates spike. Always calculate your worst-case payment at the ceiling, not the advertised starting rate."},
+  {n:"Fixed rate",p:"Locked in forever — no surprises",d:"An interest rate set at origination that never changes. Your federal loans are fixed at 5.50%. Almost always better for student borrowers — you can plan exactly what you'll owe every month for the full loan life."},
+  {n:"Grace period",p:"Time before your first payment is due",d:"The window between leaving school and your first required payment. Federal loans give 6 months. Your Sallie Mae loan has zero — payments begin immediately after graduating or dropping below half-time."},
+  {n:"Origination fee",p:"A fee taken before you see the money",d:"A fee deducted from your loan before it hits your account. A $10,000 loan with a 1.057% fee deposits $9,894 — but you owe $10,000 plus interest from day one."},
+  {n:"SAP",p:"Satisfactory Academic Progress rule",d:"Federal law requires you to maintain a minimum GPA AND complete a minimum percentage of attempted credits to keep receiving aid. At NJIT, failing or withdrawing from too many courses can suspend your entire financial aid package."},
+  {n:"Disbursement",p:"When your aid money is released",d:"The date NJIT releases financial aid to your account. If aid exceeds tuition you receive a refund — but loan portions must be repaid with interest. Don't spend the refund without knowing where it came from."},
+  {n:"Subsidized loan",p:"Govt pays your interest while in school",d:"A federal loan where the government covers interest while you're enrolled at least half-time. Your $3,500 federal loan is subsidized — no interest builds until 6 months after leaving school."},
+  {n:"EOF Grant",p:"NJ grant for first-gen students — often missed",d:"Educational Opportunity Fund — NJ's grant for first-generation, low-income students. Worth $2,000–$5,000/year on top of TAG at NJIT. Many eligible students never apply. Email eof@njit.edu to check."},
+  {n:"TAG Grant",p:"New Jersey's main state grant",d:"The Tuition Aid Grant is NJ's primary state grant for residents attending NJ colleges. Never needs to be repaid. Must renew annually via FAFSA. You're currently receiving $3,500."},
+  {n:"Auto-debit discount",p:"0.25% rate cut that can vanish permanently",d:"Many lenders offer a 0.25% rate reduction for auto-pay enrollment. If a single payment bounces, many lenders remove the discount permanently with no reinstatement. Use a dedicated account."},
+];
+var grid=document.getElementById('tgrid');
+var openIdx=null;
+TERMS.forEach(function(t,i){
+  var card=document.createElement('div');
+  card.className='tc';
+  card.innerHTML='<div class="th"><div><div class="tn">'+t.n+'</div><div class="tp">'+t.p+'</div></div><div class="ta">▼</div></div><div class="tdef">'+t.d+'</div>';
+  card.addEventListener('click',function(){
+    if(openIdx===i){card.classList.remove('open');openIdx=null;}
+    else{document.querySelectorAll('.tc').forEach(function(c){c.classList.remove('open');});card.classList.add('open');openIdx=i;}
+  });
+  grid.appendChild(card);
+});
+
+// ── CHAT ─────────────────────────────────────────────────────────
+var SYS='You are Debt Decoder AI, a financial aid advisor built for NJIT students. The student\'s documents include:\n- Highlander Merit Scholarship: $12,000/year renewable, requires 3.5 GPA minimum each semester, 15 credits/semester, STEM majors only\n- NJ TAG Grant: $3,500/year, must renew via FAFSA annually\n- Federal Subsidized Loan: $3,500 at 5.50% fixed, govt pays interest during school, 6-month grace period\n- Private Sallie Mae Loan: $8,000 at 6.99–14.5% variable, NO grace period, interest accruing now (~$2,800 capitalization by graduation)\n- Total cost: $34,200/year, remaining: $15,700/year\nContacts: financialaid@njit.edu, eof@njit.edu, registrar@njit.edu, 973-596-3466 (Dean of Students).\nBe direct, specific, plain language. Quantify in real dollars. Advocate for the student. Keep responses to 3-5 sentences.';
+var SUGS=['What if my GPA drops below 3.5?','What does capitalization mean for me?','What if I do a co-op semester?','Am I missing any NJ state aid?','Can I appeal if I lose my scholarship?','Should I pay interest on my private loan now?','What happens if I withdraw from a class?','What is SAP and how does it affect me?'];
+var csugs=document.getElementById('csugs');
+SUGS.forEach(function(q){
+  var chip=document.createElement('span');
+  chip.className='sug';chip.textContent=q;
+  chip.onclick=function(){sendMsg(q);};
+  csugs.appendChild(chip);
+});
+var chatHist=[];
+var chatBusy=false;
+function sendChat(){
+  var v=document.getElementById('cin').value.trim();
+  if(!v||chatBusy)return;
+  document.getElementById('cin').value='';
+  sendMsg(v);
+}
+async function sendMsg(text){
+  if(chatBusy)return;
+  chatBusy=true;
+  document.getElementById('csend').disabled=true;
+  addMsg(text,'user');
+  chatHist.push({role:'user',content:text});
+  var log=document.getElementById('clog');
+  var typing=document.createElement('div');
+  typing.className='msg bot';
+  typing.innerHTML='<div class="tdots"><div class="td"></div><div class="td"></div><div class="td"></div></div>';
+  log.appendChild(typing);log.scrollTop=log.scrollHeight;
+  try{
+    var res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:SYS,messages:chatHist})
+    });
+    var data=await res.json();
+    var reply=data.content&&data.content[0]&&data.content[0].text?data.content[0].text:'Sorry, I had trouble responding. Please try again.';
+    typing.remove();addMsg(reply,'bot');
+    chatHist.push({role:'assistant',content:reply});
+  }catch(e){
+    typing.remove();addMsg('Connection issue — please try again in a moment.','bot');
+  }
+  chatBusy=false;
+  document.getElementById('csend').disabled=false;
+}
+function addMsg(text,type){
+  var log=document.getElementById('clog');
+  var div=document.createElement('div');
+  div.className='msg '+type;div.textContent=text;
+  log.appendChild(div);log.scrollTop=log.scrollHeight;
+}
+
+// ── APPEAL ───────────────────────────────────────────────────────
+var DEF_LETTER='Dear Stevens Institute of Technology Office of Financial Aid,\n\nI am writing to respectfully request a reconsideration of my financial aid award for the upcoming academic year. I have been accepted to Stevens and am genuinely excited about the program and the opportunities it offers.\n\nAfter carefully reviewing my financial aid options, I have received a significantly more competitive offer from another institution that I must consider seriously.\n\nNew Jersey Institute of Technology has offered me the following:\n  · Highlander Merit Scholarship: $12,000/year (renewable for 4 years — $48,000 total)\n  · NJ TAG Grant: $3,500/year\n  · Federal Subsidized Loan: $3,500\n  · True annual net cost: $15,700\n\nMy current Stevens award, while generous in year one, includes a one-time scholarship that does not renew — resulting in a net cost difference of approximately $12,700 per year beginning in year two, and a projected 4-year debt difference of over $57,000.\n\nI believe strongly in the value of a Stevens education and would sincerely prefer to attend if the financial gap can be narrowed. I would be grateful for any additional merit aid, renewable grants, or institutional funding you are able to offer.\n\nI am happy to provide a copy of my competing offer letter or any additional documentation. I look forward to your response and appreciate your time.\n\nSincerely,\n[Your Full Name]\n[NJIT Applicant ID] | [Stevens Application ID]\n[Email] | [Phone]\n[Date]';
+document.getElementById('aletter').value=DEF_LETTER;
+function copyLetter(){
+  navigator.clipboard.writeText(document.getElementById('aletter').value).then(function(){
+    var btn=event.target;btn.textContent='✓ Copied!';setTimeout(function(){btn.textContent='Copy Letter';},2000);
+  });
+}
+function resetLetter(){document.getElementById('aletter').value=DEF_LETTER;}
+
+// ── CAP CALC ─────────────────────────────────────────────────────
+function updateCap(){
+  var loan=parseInt(document.getElementById('sl-loan').value);
+  var rate=parseFloat(document.getElementById('sl-rate').value);
+  var years=parseInt(document.getElementById('sl-years').value);
+  var acc=Math.round(loan*(rate/100)*years);
+  var cap=loan+acc;
+  var mo=Math.round(loan*(rate/100)/12);
+  var extra=Math.round(acc*(rate/100)*5);
+  document.getElementById('out-loan').textContent='$'+loan.toLocaleString();
+  document.getElementById('out-rate').textContent=rate.toFixed(1)+'%';
+  document.getElementById('out-years').textContent=years+(years===1?' year':' years');
+  document.getElementById('cr-orig').textContent='$'+loan.toLocaleString();
+  document.getElementById('cr-acc').textContent='+$'+acc.toLocaleString();
+  document.getElementById('cr-mo').textContent='~$'+mo+'/mo';
+  document.getElementById('cr-tot').textContent='$'+cap.toLocaleString();
+  document.getElementById('cins').innerHTML='That extra <strong>$'+acc.toLocaleString()+'</strong> doesn\'t sit still — you now pay '+rate.toFixed(1)+'% on <strong>$'+cap.toLocaleString()+'</strong> instead of $'+loan.toLocaleString()+'. Over 10 years this costs roughly <strong>$'+extra.toLocaleString()+'</strong> more than paying interest during school (~$'+mo+'/month).';
+  document.getElementById('cgt').textContent='How to fight it: pay ~$'+mo+'/month now';
+  document.getElementById('cgb').textContent='Paying just the monthly interest during school prevents $'+acc.toLocaleString()+' from capitalizing. Your federal subsidized loan avoids this entirely — the government pays that interest.';
+}
+</script>
+</body>
+</html>
