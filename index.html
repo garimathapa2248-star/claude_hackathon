@@ -1,0 +1,566 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Debt Decoder â€” NJIT Financial Aid Companion</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-mark">
+        <div class="logo-icon">DD</div>
+        <div class="logo-text">Debt Decoder</div>
+      </div>
+      <div class="logo-sub">NJIT Financial Aid Companion</div>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-label">My Aid</div>
+      <button class="nav-item active" onclick="showPage('dashboard', this)">
+        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+        Dashboard
+      </button>
+      <button class="nav-item" onclick="showPage('redflags', this)">
+        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+        Red Flags
+        <span class="nav-badge">3</span>
+      </button>
+      <button class="nav-item" onclick="showPage('terms', this)">
+        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+        Term Decoder
+      </button>
+      <button class="nav-item" onclick="showPage('chat', this)">
+        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+        Ask Claude
+      </button>
+
+      <div class="nav-label">Tools</div>
+      <button class="nav-item" onclick="showPage('compare', this)">
+        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+        Compare Schools
+      </button>
+      <button class="nav-item" onclick="showPage('appeal', this)">
+        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+        Appeal Letter
+      </button>
+      <button class="nav-item" onclick="showPage('visa', this)">
+        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064"/></svg>
+        Visa & Tuition
+      </button>
+
+      <div class="nav-label">Support</div>
+      <button class="nav-item" onclick="showPage('emergency', this)">
+        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+        Crisis Help
+      </button>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="njit-badge">
+        <div class="njit-dot"></div>
+        <div>
+          <div class="njit-label">Logged in as</div>
+          <div class="njit-name">NJIT Student</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- DASHBOARD -->
+    <div class="page active" id="page-dashboard">
+      <div class="page-header">
+        <h1 class="page-title">Your Financial Aid Dashboard</h1>
+        <p class="page-sub">NJIT Fall 2025 Â· Load your documents to get started, or explore the sample below.</p>
+      </div>
+
+      <div id="upload-section">
+        <div class="upload-zone" onclick="loadDemo()">
+          <div class="upload-icon">
+            <svg width="24" height="24" fill="none" stroke="#CC0000" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+          </div>
+          <div class="upload-title">Upload your NJIT financial aid documents</div>
+          <div class="upload-sub">We'll decode every term, flag every risk, and tell you exactly what to do next</div>
+          <div class="upload-types">
+            <span class="upload-type">Award Letter</span>
+            <span class="upload-type">Scholarship Doc</span>
+            <span class="upload-type">Tuition Bill</span>
+            <span class="upload-type">Loan Offer</span>
+            <span class="upload-type">NJ State Aid</span>
+          </div>
+          <button class="btn btn-primary" style="margin-right:8px">Upload Documents</button>
+          <button class="btn btn-secondary" onclick="event.stopPropagation();loadDemo()">Load Sample â†—</button>
+        </div>
+      </div>
+
+      <div id="demo-section" style="display:none">
+        <div class="metrics">
+          <div class="metric">
+            <div class="metric-label">Total Cost of Attendance</div>
+            <div class="metric-value">$34,200</div>
+            <div class="metric-note">Per academic year</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Free Aid (grants + scholarships)</div>
+            <div class="metric-value green">$18,500</div>
+            <div class="metric-note">Never needs to be repaid</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Your Remaining Cost</div>
+            <div class="metric-value red">$15,700</div>
+            <div class="metric-note">Loans + out-of-pocket</div>
+          </div>
+        </div>
+
+        <div class="score-card">
+          <div class="score-ring-wrap">
+            <svg width="90" height="90" viewBox="0 0 90 90">
+              <circle cx="45" cy="45" r="36" fill="none" stroke="#E5E7EB" stroke-width="9"/>
+              <circle cx="45" cy="45" r="36" fill="none" stroke="#D97706" stroke-width="9"
+                stroke-dasharray="142.2" stroke-dashoffset="52.6" stroke-linecap="round"/>
+            </svg>
+            <div class="score-number">63</div>
+          </div>
+          <div>
+            <div class="score-info-title">Package Health Score</div>
+            <div class="score-info-val">63 / 100 â€” Caution</div>
+            <div class="score-info-desc">Your free aid is strong. Your private loan carries serious risks â€” variable interest rate, no grace period, and interest capitalizing right now. <span style="color:var(--red);cursor:pointer;font-weight:500" onclick="showPage('redflags', document.querySelector('[onclick*=redflags]'))">View all red flags â†’</span></div>
+          </div>
+        </div>
+
+        <div class="section-label">Your Documents Decoded</div>
+
+        <div class="card">
+          <div class="card-header-row">
+            <div>
+              <div class="card-title">Highlander Merit Scholarship â€” $12,000/yr</div>
+              <div class="card-sub">NJIT Presidential Award</div>
+            </div>
+            <span class="badge badge-amber">Conditional</span>
+          </div>
+          <div class="data-row"><span class="dr-label">Annual amount</span><span class="dr-val green">$12,000</span></div>
+          <div class="data-row"><span class="dr-label">Renewable?</span><span class="dr-val">Yes â€” up to 4 years</span></div>
+          <div class="data-row"><span class="dr-label">Minimum GPA required</span><span class="dr-val red">3.5 each semester</span></div>
+          <div class="data-row"><span class="dr-label">Minimum credits required</span><span class="dr-val red">15 credits/semester</span></div>
+          <div class="data-row"><span class="dr-label">Major restriction</span><span class="dr-val amber">STEM majors only</span></div>
+          <div class="data-row"><span class="dr-label">Stacks with federal aid?</span><span class="dr-val green">Yes â€” no penalty</span></div>
+        </div>
+
+        <div class="card">
+          <div class="card-header-row">
+            <div>
+              <div class="card-title">NJ TAG Grant â€” $3,500/yr</div>
+              <div class="card-sub">Tuition Aid Grant â€” New Jersey</div>
+            </div>
+            <span class="badge badge-green">Free Money</span>
+          </div>
+          <div class="data-row"><span class="dr-label">Type</span><span class="dr-val green">Grant â€” never repay</span></div>
+          <div class="data-row"><span class="dr-label">NJ residency required</span><span class="dr-val">Yes</span></div>
+          <div class="data-row"><span class="dr-label">Annual income limit</span><span class="dr-val">Under $250,000/yr</span></div>
+          <div class="data-row"><span class="dr-label">Renewal</span><span class="dr-val amber">Must reapply via FAFSA each year</span></div>
+        </div>
+
+        <div class="card">
+          <div class="card-header-row">
+            <div>
+              <div class="card-title">Federal Subsidized Loan â€” $3,500</div>
+              <div class="card-sub">Direct Subsidized Stafford Loan</div>
+            </div>
+            <span class="badge badge-blue">Best Type</span>
+          </div>
+          <div class="data-row"><span class="dr-label">Interest rate</span><span class="dr-val green">5.50% fixed</span></div>
+          <div class="data-row"><span class="dr-label">Interest during school</span><span class="dr-val green">No â€” govt pays it</span></div>
+          <div class="data-row"><span class="dr-label">Grace period after graduation</span><span class="dr-val">6 months</span></div>
+          <div class="data-row"><span class="dr-label">Monthly payment (10-yr plan)</span><span class="dr-val">~$38/month</span></div>
+        </div>
+
+        <div class="card">
+          <div class="card-header-row">
+            <div>
+              <div class="card-title">Private Loan â€” $8,000</div>
+              <div class="card-sub">Sallie Mae Smart Option Loan</div>
+            </div>
+            <span class="badge badge-red">Watch Out</span>
+          </div>
+          <div class="data-row"><span class="dr-label">Interest rate</span><span class="dr-val red">6.99â€“14.5% variable</span></div>
+          <div class="data-row"><span class="dr-label">Interest during school</span><span class="dr-val red">Accruing right now</span></div>
+          <div class="data-row"><span class="dr-label">Grace period</span><span class="dr-val red">None â€” payments start immediately</span></div>
+          <div class="data-row"><span class="dr-label">Capitalization at graduation</span><span class="dr-val red">~$2,800 added to balance</span></div>
+          <div class="data-row"><span class="dr-label">Monthly payment range (10-yr)</span><span class="dr-val red">$93 â€“ $150/month</span></div>
+        </div>
+
+        <div class="section-label">Immediate Action Items</div>
+        <div class="card">
+          <div class="action-item"><div class="action-num">1</div><div class="action-text">Set a GPA reminder every semester â€” dropping below 3.5 costs you $12,000 instantly.</div></div>
+          <div class="action-item"><div class="action-num">2</div><div class="action-text">Try to reduce the private loan amount. Borrow only what you absolutely need â€” every dollar accrues interest today.</div></div>
+          <div class="action-item"><div class="action-num">3</div><div class="action-text">Check if you qualify for EOF. First-gen NJ students may have additional grant money available at eof@njit.edu.</div></div>
+          <div class="action-item"><div class="action-num">4</div><div class="action-text">Enroll in auto-debit for federal loans to lock in the 0.25% rate discount before your first payment.</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RED FLAGS -->
+    <div class="page" id="page-redflags">
+      <div class="page-header">
+        <h1 class="page-title">Red Flag Scanner</h1>
+        <p class="page-sub">Hidden risks in your documents â€” explained in plain language with real dollar impact.</p>
+      </div>
+      <div class="score-card">
+        <div class="score-ring-wrap">
+          <svg width="90" height="90" viewBox="0 0 90 90">
+            <circle cx="45" cy="45" r="36" fill="none" stroke="#E5E7EB" stroke-width="9"/>
+            <circle cx="45" cy="45" r="36" fill="none" stroke="#D97706" stroke-width="9"
+              stroke-dasharray="142.2" stroke-dashoffset="52.6" stroke-linecap="round"/>
+          </svg>
+          <div class="score-number">63</div>
+        </div>
+        <div>
+          <div class="score-info-title">Package Health Score</div>
+          <div class="score-info-val">3 red Â· 2 amber Â· 2 green</div>
+          <div class="score-info-desc">Address red flags first. Each one costs real money if ignored.</div>
+        </div>
+      </div>
+
+      <div class="section-label">Critical â€” address immediately</div>
+      <div class="flag red"><div class="flag-dot"></div><div><div class="flag-title">Variable interest rate on private loan</div><div class="flag-body">Your rate ranges 6.99â€“14.5%. At the maximum, monthly payments jump from $93 to $150 â€” an extra $684/year on the same loan. Always model the worst case, not the starting rate.</div></div></div>
+      <div class="flag red"><div class="flag-dot"></div><div><div class="flag-title">No grace period â€” payments start at graduation</div><div class="flag-body">Federal loans give 6 months. Your Sallie Mae loan does not. You need income lined up before your last semester ends or you'll immediately be at risk of default.</div></div></div>
+      <div class="flag red"><div class="flag-dot"></div><div><div class="flag-title">Interest capitalizing right now â€” ~$2,800 at graduation</div><div class="flag-body">Your private loan accrues interest daily. In 4 years, ~$2,800 in unpaid interest gets added to your principal at repayment start. You'll pay interest on $10,800 instead of $8,000 â€” costing roughly $800 extra over 10 years.</div></div></div>
+
+      <div class="section-label">Warnings â€” monitor closely</div>
+      <div class="flag amber"><div class="flag-dot"></div><div><div class="flag-title">Scholarship GPA floor â€” 3.5 minimum, no exceptions noted</div><div class="flag-body">Dropping to 3.4 at the end of any semester means losing $12,000 for that year. NJIT engineering and CS courses commonly cause freshman GPA dips. Know the appeal process before you need it.</div></div></div>
+      <div class="flag amber"><div class="flag-dot"></div><div><div class="flag-title">15 credits/semester required â€” above standard load</div><div class="flag-body">Most students take 12â€“15. If you need to drop a class for any reason â€” illness, hardship, work â€” you risk losing the scholarship. Ask the financial aid office if a hardship waiver exists.</div></div></div>
+
+      <div class="section-label">You're in good shape here</div>
+      <div class="flag green"><div class="flag-dot"></div><div><div class="flag-title">Federal subsidized loan is the best type available</div><div class="flag-body">Fixed rate, government pays interest while you're in school, and you have access to income-driven repayment and forgiveness programs if needed after graduation.</div></div></div>
+      <div class="flag green"><div class="flag-dot"></div><div><div class="flag-title">Scholarship stacks with federal aid â€” no clawback</div><div class="flag-body">Some scholarships reduce federal aid eligibility dollar-for-dollar. Yours doesn't. You receive both the $12k scholarship and your federal aid without any reduction.</div></div></div>
+    </div>
+
+    <!-- TERM DECODER -->
+    <div class="page" id="page-terms">
+      <div class="page-header">
+        <h1 class="page-title">Term Decoder</h1>
+        <p class="page-sub">Every financial term you'll encounter â€” explained in plain English, with context for your specific documents.</p>
+      </div>
+      <div class="terms-grid">
+        <div class="term-card" onclick="toggleTerm(this)">
+          <div class="term-header"><div><div class="term-name">Capitalization</div><div class="term-preview">When unpaid interest becomes principal</div></div><div class="term-arrow">â–¼</div></div>
+          <div class="term-def">When you don't pay interest while in school, it accumulates silently. At graduation or repayment start, all that unpaid interest gets added to your original loan balance â€” and you now pay interest on that larger number. On your $8k private loan over 4 years, this adds ~$2,800 you'll pay interest on for 10 years.</div>
+        </div>
+        <div class="term-card" onclick="toggleTerm(this)">
+          <div class="term-header"><div><div class="term-name">Forbearance</div><div class="term-preview">Pausing payments â€” but interest keeps running</div></div><div class="term-arrow">â–¼</div></div>
+          <div class="term-def">A temporary pause on loan payments, usually for financial hardship. Sounds helpful â€” but interest keeps accruing the entire time. When forbearance ends, all that interest capitalizes onto your principal. Use it only as an absolute last resort and understand the cost before requesting it.</div>
+        </div>
+        <div class="term-card" onclick="toggleTerm(this)">
+          <div class="term-header"><div><div class="term-name">Variable rate</div><div class="term-preview">An interest rate tied to market conditions</div></div><div class="term-arrow">â–¼</div></div>
+          <div class="term-def">An interest rate that rises and falls with a market index (usually SOFR). Your Sallie Mae loan at "6.99â€“14.5% variable" could more than double if rates spike. Always calculate your payment at the ceiling rate, not the floor. This is one of the biggest risks in your current package.</div>
+        </div>
+        <div class="term-card" onclick="toggleTerm(this)">
+          <div class="term-header"><div><div class="term-name">Fixed rate</div><div class="term-preview">Locked in forever â€” no surprises</div></div><div class="term-arrow">â–¼</div></div>
+          <div class="term-def">An interest rate set at origination that never changes regardless of market conditions. Your federal loans are fixed at 5.50%. This is almost always better for student borrowers because you can plan exactly what you'll owe every month for the entire life of the loan.</div>
+        </div>
+        <div class="term-card" onclick="toggleTerm(this)">
+          <div class="term-header"><div><div class="term-name">Grace period</div><div class="term-preview">Time before your first payment is due</div></div><div class="term-arrow">â–¼</div></div>
+          <div class="term-def">The window between leaving school and your first required loan payment. Federal loans give you 6 months. Your private Sallie Mae loan has zero grace period â€” payments begin immediately after you graduate or drop below half-time. Plan your job search accordingly.</div>
+        </div>
+        <div class="term-card" onclick="toggleTerm(this)">
+          <div class="term-header"><div><div class="term-name">Origination fee</div><div class="term-preview">A fee taken before you see the money</div></div><div class="term-arrow">â–¼</div></div>
+          <div class="term-def">A fee deducted from your loan before it hits your account. A $10,000 loan with a 1.057% origination fee deposits $9,894 â€” but you owe $10,000 plus interest. Federal loans charge ~1.057%. Private loans vary. You're borrowing more than you receive.</div>
+        </div>
+        <div class="term-card" onclick="toggleTerm(this)">
+          <div class="term-header"><div><div class="term-name">SAP</div><div class="term-preview">Satisfactory Academic Progress â€” the rule most students don't know</div></div><div class="term-arrow">â–¼</div></div>
+          <div class="term-def">Federal law requires you to maintain a minimum GPA AND complete a minimum percentage of attempted credits to continue receiving aid. At NJIT, failing or withdrawing from too many classes triggers a SAP flag. Your entire financial aid package can be suspended â€” not just one piece â€” with minimal warning.</div>
+        </div>
+        <div class="term-card" onclick="toggleTerm(this)">
+          <div class="term-header"><div><div class="term-name">Disbursement</div><div class="term-preview">When your aid money is actually released</div></div><div class="term-arrow">â–¼</div></div>
+          <div class="term-def">The date NJIT releases financial aid funds to your student account. Happens at the start of each semester. If your aid exceeds tuition, you receive a refund â€” but loan portions of that refund must be repaid with interest. Don't spend the refund without knowing where it came from.</div>
+        </div>
+        <div class="term-card" onclick="toggleTerm(this)">
+          <div class="term-header"><div><div class="term-name">Subsidized loan</div><div class="term-preview">The government pays your interest while in school</div></div><div class="term-arrow">â–¼</div></div>
+          <div class="term-def">A federal loan where the government covers the interest that accrues while you're enrolled at least half-time and during grace periods. This is significantly better than unsubsidized or private loans. Your $3,500 federal loan is subsidized â€” no interest builds up until 6 months after you leave school.</div>
+        </div>
+        <div class="term-card" onclick="toggleTerm(this)">
+          <div class="term-header"><div><div class="term-name">EOF Grant</div><div class="term-preview">NJ's grant for first-gen students â€” often missed</div></div><div class="term-arrow">â–¼</div></div>
+          <div class="term-def">The Educational Opportunity Fund is a New Jersey state grant for first-generation, low-income students. It can provide $2,000â€“$5,000/year on top of TAG. NJIT has a strong EOF program. If you're a first-gen NJ student, email eof@njit.edu to check eligibility â€” many students leave this money unclaimed.</div>
+        </div>
+        <div class="term-card" onclick="toggleTerm(this)">
+          <div class="term-header"><div><div class="term-name">TAG Grant</div><div class="term-preview">New Jersey's main state grant</div></div><div class="term-arrow">â–¼</div></div>
+          <div class="term-def">The Tuition Aid Grant is New Jersey's primary state grant for residents attending NJ schools. It doesn't need to be repaid. You must reapply every year via FAFSA. It's already in your package at $3,500 â€” but it can disappear if you miss the annual renewal deadline or move out of NJ.</div>
+        </div>
+        <div class="term-card" onclick="toggleTerm(this)">
+          <div class="term-header"><div><div class="term-name">Auto-debit discount</div><div class="term-preview">Rate reduction that can vanish permanently</div></div><div class="term-arrow">â–¼</div></div>
+          <div class="term-def">Many lenders offer 0.25% interest rate reduction for enrolling in automatic payments. Sounds small but saves ~$150 over a loan's life. The catch: if a payment fails even once, many lenders permanently remove the discount with no reinstatement option. Use a dedicated account with always sufficient funds.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHAT -->
+    <div class="page" id="page-chat">
+      <div class="page-header">
+        <h1 class="page-title">Ask Claude</h1>
+        <p class="page-sub">Your AI financial advisor â€” with full context of your NJIT documents. Ask anything.</p>
+      </div>
+      <div class="chat-container">
+        <div class="chat-header">
+          <div class="chat-avatar">AI</div>
+          <div>
+            <div class="chat-name">Debt Decoder AI</div>
+            <div class="chat-status"><div class="status-dot"></div>Online â€” documents loaded</div>
+          </div>
+        </div>
+        <div class="chat-messages" id="chat-log">
+          <div class="msg bot">Hi! I've reviewed your NJIT financial aid documents. I can see your Highlander Scholarship, TAG Grant, federal subsidized loan, and your private Sallie Mae loan. Ask me anything â€” about the terms, the risks, what happens in specific situations, or what you should do next.</div>
+        </div>
+        <div class="chat-suggestions">
+          <span class="sug-chip" onclick="askSug(this)">What if my GPA drops below 3.5?</span>
+          <span class="sug-chip" onclick="askSug(this)">What does capitalization mean for me?</span>
+          <span class="sug-chip" onclick="askSug(this)">What happens if I do a co-op semester?</span>
+          <span class="sug-chip" onclick="askSug(this)">Am I missing any NJ state aid?</span>
+          <span class="sug-chip" onclick="askSug(this)">Can I appeal if I lose my scholarship?</span>
+          <span class="sug-chip" onclick="askSug(this)">Should I pay interest now while in school?</span>
+        </div>
+        <div class="chat-input-area">
+          <input class="chat-input" id="chat-input" type="text" placeholder="Ask about your documents, your loans, your rights..." onkeydown="if(event.key==='Enter')sendMsg()">
+          <button class="chat-send" onclick="sendMsg()">Send</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- COMPARE -->
+    <div class="page" id="page-compare">
+      <div class="page-header">
+        <h1 class="page-title">Compare Schools</h1>
+        <p class="page-sub">True 4-year cost comparison â€” not sticker price, not year-one estimates. What you'll actually owe.</p>
+      </div>
+      <div class="school-grid">
+        <div class="school-card winner">
+          <div class="school-winner-badge">Best value for your profile</div>
+          <div class="school-name">NJIT</div>
+          <div class="school-type">Public university â€” in-state NJ</div>
+          <div class="school-cost green">$15,700<span style="font-size:16px;color:var(--gray-400)">/yr</span></div>
+          <div class="school-cost-label">True net cost after all aid</div>
+          <div class="data-row"><span class="dr-label" style="font-size:12px">Grant aid</span><span class="dr-val green" style="font-size:12px">$6,500</span></div>
+          <div class="data-row"><span class="dr-label" style="font-size:12px">Scholarship</span><span class="dr-val" style="font-size:12px">$12,000 renewable</span></div>
+          <div class="data-row"><span class="dr-label" style="font-size:12px">4-yr debt estimate</span><span class="dr-val green" style="font-size:12px">~$46,000</span></div>
+          <div class="data-row"><span class="dr-label" style="font-size:12px">Scholarship risk</span><span class="dr-val amber" style="font-size:12px">GPA 3.5 required</span></div>
+        </div>
+        <div class="school-card">
+          <div style="height:22px"></div>
+          <div class="school-name">Stevens Tech</div>
+          <div class="school-type">Private university â€” NJ</div>
+          <div class="school-cost red">$28,400<span style="font-size:16px;color:var(--gray-400)">/yr</span></div>
+          <div class="school-cost-label">True net cost after all aid</div>
+          <div class="data-row"><span class="dr-label" style="font-size:12px">Grant aid</span><span class="dr-val" style="font-size:12px">$10,000</span></div>
+          <div class="data-row"><span class="dr-label" style="font-size:12px">Scholarship</span><span class="dr-val red" style="font-size:12px">$8,000 year 1 only</span></div>
+          <div class="data-row"><span class="dr-label" style="font-size:12px">4-yr debt estimate</span><span class="dr-val red" style="font-size:12px">~$103,000</span></div>
+          <div class="data-row"><span class="dr-label" style="font-size:12px">Scholarship risk</span><span class="dr-val red" style="font-size:12px">One-time â€” gone year 2</span></div>
+        </div>
+      </div>
+      <div class="flag amber">
+        <div class="flag-dot"></div>
+        <div>
+          <div class="flag-title">Stevens' scholarship disappears year 2</div>
+          <div class="flag-body">Their $8,000 award is one-time only. Starting year 2, your Stevens cost jumps to $36,400/yr. Over 4 years, you'd graduate with $57,000 more in debt than at NJIT. On a $85k CS starting salary, that's ~$600/month more in loan payments for 10 years.</div>
+        </div>
+      </div>
+      <div class="flag blue">
+        <div class="flag-dot"></div>
+        <div>
+          <div class="flag-title">Profile used for this comparison</div>
+          <div class="flag-body">Computer Science major Â· Expected starting salary ~$85k (NJ) Â· Interested in public or private sector work Â· NJ resident</div>
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="showPage('appeal', document.querySelector('[onclick*=appeal]'))">Generate appeal letter to Stevens â†’</button>
+    </div>
+
+    <!-- APPEAL LETTER -->
+    <div class="page" id="page-appeal">
+      <div class="page-header">
+        <h1 class="page-title">Appeal Letter Generator</h1>
+        <p class="page-sub">Turn your better offer into leverage. This is what students with financially savvy parents already know to do.</p>
+      </div>
+      <div class="flag blue" style="margin-bottom:1.25rem">
+        <div class="flag-dot"></div>
+        <div>
+          <div class="flag-title">You can negotiate financial aid â€” most students don't know this</div>
+          <div class="flag-body">Financial aid offers are not final. If you have a competing offer from another school, you can formally ask the school with the weaker package to match or improve it. Schools do this regularly. The letter below is ready to send.</div>
+        </div>
+      </div>
+      <div class="card" style="margin-bottom:1rem">
+        <div class="card-title">Your leverage: NJIT vs Stevens</div>
+        <div class="data-row"><span class="dr-label">Your NJIT net cost</span><span class="dr-val green">$15,700/yr</span></div>
+        <div class="data-row"><span class="dr-label">Stevens net cost</span><span class="dr-val red">$28,400/yr</span></div>
+        <div class="data-row"><span class="dr-label">Annual gap</span><span class="dr-val red">$12,700</span></div>
+        <div class="data-row"><span class="dr-label">4-year debt gap</span><span class="dr-val red">~$57,000</span></div>
+      </div>
+      <div class="section-label">Generated appeal letter â€” ready to send</div>
+      <div class="letter-preview">Dear Stevens Institute of Technology Office of Financial Aid,
+
+I am writing to respectfully request a reconsideration of my financial aid award for the upcoming academic year. I have been accepted to Stevens and am genuinely excited about the program and the opportunities it offers.
+
+However, after carefully comparing my financial aid options, I have received a significantly more competitive offer from another institution that I must consider seriously.
+
+New Jersey Institute of Technology has offered me the following:
+  Â· Highlander Merit Scholarship: $12,000/year (renewable for 4 years)
+  Â· NJ TAG Grant: $3,500/year
+  Â· Federal Subsidized Loan: $3,500
+  Â· Total annual net cost: $15,700
+
+My current Stevens award, while generous in the first year, includes a one-time scholarship that does not renew, resulting in a net cost difference of approximately $12,700 per year beginning in year two â€” and a projected 4-year debt difference of $57,000.
+
+I am deeply interested in attending Stevens and believe strongly in the value of the education and community here. I would sincerely prefer to attend if the financial gap can be narrowed. I would be grateful for any additional merit aid, renewable grant support, or institutional funding you are able to offer.
+
+I am happy to provide copies of my competing offer letter or any additional documentation that would be helpful in reviewing my case. I look forward to your response and appreciate your time and consideration.
+
+Sincerely,
+[Your Full Name]
+[NJIT Applicant ID / Stevens Application ID]
+[Email Address] | [Phone Number]
+[Date]</div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-primary">Copy Letter</button>
+        <button class="btn btn-secondary">Download as PDF</button>
+        <button class="btn btn-ghost" onclick="showPage('chat', document.querySelector('[onclick*=chat]'))">Ask Claude how to follow up â†—</button>
+      </div>
+    </div>
+
+    <!-- VISA -->
+    <div class="page" id="page-visa">
+      <div class="page-header">
+        <h1 class="page-title">Visa & Tuition Classification</h1>
+        <p class="page-sub">For international students navigating visa transitions at NJIT â€” the $16,000/year question.</p>
+      </div>
+      <div class="flag red" style="margin-bottom:1.25rem">
+        <div class="flag-dot"></div>
+        <div>
+          <div class="flag-title">In-state vs. international tuition â€” $16,000/year difference at NJIT</div>
+          <div class="flag-body">If your visa status changes (e.g., H-1B dependent to F-1, or transitioning from dependent to independent status), you may be reclassified as international â€” unless you proactively submit documentation proving NJ domicile. Many students lose in-state status simply because they didn't know to file.</div>
+        </div>
+      </div>
+      <div class="flag blue" style="margin-bottom:1.25rem">
+        <div class="flag-dot"></div>
+        <div>
+          <div class="flag-title">F-1 students: you may still qualify for in-state rates</div>
+          <div class="flag-body">F-1 visa status alone doesn't automatically disqualify you from in-state tuition in NJ. If you or your parents have established NJ domicile (not just residence), you may file for in-state classification. This is worth fighting for â€” it's $64,000 over 4 years.</div>
+        </div>
+      </div>
+      <div class="section-label">Document checklist â€” maintaining in-state status</div>
+      <div class="card">
+        <div class="step-list">
+          <div class="step-item">
+            <div class="step-num">1</div>
+            <div>
+              <div class="step-title">Proof of NJ domicile</div>
+              <div class="step-body">NJ driver's license or state ID, lease or mortgage in your name (or parent's name if dependent), and proof the address has been your primary home â€” not just a mailing address.</div>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">2</div>
+            <div>
+              <div class="step-title">12-month continuous NJ residency evidence</div>
+              <div class="step-body">Utility bills, bank statements, or employer letters showing a consistent NJ address for 12+ consecutive months before the semester you're applying for.</div>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">3</div>
+            <div>
+              <div class="step-title">Intent to remain in NJ documentation</div>
+              <div class="step-body">NJ voter registration card, NJ state tax returns (Form NJ-1040), or a signed domicile declaration form â€” available from NJIT's Registrar's Office on request.</div>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">4</div>
+            <div>
+              <div class="step-title">Complete visa status documentation</div>
+              <div class="step-body">Copy of current I-20, I-94 arrival/departure record, all USCIS approval notices for current and previous visa statuses, and passport biographic page.</div>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">5</div>
+            <div>
+              <div class="step-title">Submit to NJIT Registrar â€” before semester billing deadline</div>
+              <div class="step-body">Late submissions are almost never accepted. Email registrar@njit.edu with subject line: "In-State Tuition Classification Appeal â€” [Your Name] â€” [NJIT ID]". Include all documents as attachments. Follow up within 5 business days if no confirmation.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="flag amber">
+        <div class="flag-dot"></div>
+        <div>
+          <div class="flag-title">International students: also check health insurance waiver deadline</div>
+          <div class="flag-body">NJIT auto-enrolls international students in university health insurance (~$2,500/yr). If you have comparable coverage, you can waive it â€” but the window is only 2 weeks at the start of each semester. Missing it locks you in for the full year.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EMERGENCY -->
+    <div class="page" id="page-emergency">
+      <div class="page-header">
+        <h1 class="page-title">Crisis Help</h1>
+        <p class="page-sub">You are not alone. NJIT has real resources available right now.</p>
+      </div>
+      <div class="crisis-banner">
+        <div class="crisis-banner-title">In financial crisis right now?</div>
+        <div class="crisis-banner-sub">There are people at NJIT whose entire job is to help you through this. Use the resources below. None of them require you to have it figured out first â€” that's what they're for.</div>
+      </div>
+      <div class="section-label">NJIT Emergency Resources</div>
+      <div class="card">
+        <div class="resource-item">
+          <div><div class="resource-name">NJIT Emergency Financial Aid Fund</div><div class="resource-desc">One-time grants for students facing sudden hardship â€” job loss, family emergency, medical crisis</div></div>
+          <div class="resource-contact">financialaid@njit.edu</div>
+        </div>
+        <div class="resource-item">
+          <div><div class="resource-name">Highlander Food Pantry</div><div class="resource-desc">Free groceries â€” no appointment, no questions, no judgment</div></div>
+          <div class="resource-contact">Campus Center Rm 235</div>
+        </div>
+        <div class="resource-item">
+          <div><div class="resource-name">Dean of Students Office</div><div class="resource-desc">Housing crisis, unexpected hardship, family emergency â€” they advocate for you</div></div>
+          <div class="resource-contact">973-596-3466</div>
+        </div>
+        <div class="resource-item">
+          <div><div class="resource-name">SAP Appeal â€” Lost Aid Due to Grades</div><div class="resource-desc">Most students don't know aid suspension is appealable. Document the hardship and file immediately.</div></div>
+          <div class="resource-contact">financialaid@njit.edu</div>
+        </div>
+        <div class="resource-item">
+          <div><div class="resource-name">EOF Emergency Support</div><div class="resource-desc">First-gen EOF students have additional emergency funding separate from general financial aid</div></div>
+          <div class="resource-contact">eof@njit.edu</div>
+        </div>
+        <div class="resource-item">
+          <div><div class="resource-name">NJIT Counseling Center</div><div class="resource-desc">Financial stress is real stress. Free confidential sessions for all NJIT students.</div></div>
+          <div class="resource-contact">973-596-3414</div>
+        </div>
+      </div>
+
+      <div class="section-label">Before you withdraw from a class â€” read this first</div>
+      <div class="flag red">
+        <div class="flag-dot"></div>
+        <div>
+          <div class="flag-title">Withdrawing triggers a chain reaction you can't undo</div>
+          <div class="flag-body">Dropping below full-time enrollment can simultaneously affect your scholarship eligibility, your loan disbursement schedule, your health insurance status, your F-1 visa status (if international), and your SAP standing â€” all at once, often with no warning. Talk to financial aid before you withdraw, not after.</div>
+        </div>
+      </div>
+      <div class="flag amber">
+        <div class="flag-dot"></div>
+        <div>
+          <div class="flag-title">Refund check â‰  free money</div>
+          <div class="flag-body">When your aid exceeds tuition, NJIT sends a refund. This feels like extra money â€” it is not. Most of it is loan money you will repay with interest. Budget it across the entire semester before spending any of it.</div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script src="js/app.js"></script>
+</body>
+</html>
+
+
